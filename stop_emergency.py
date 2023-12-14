@@ -41,9 +41,9 @@ class EmergencyStop:
                 self.stop()
                 return 0
         for val in ranges:
-                if val < 0.30:
-                    self.turn()
-                    return 0
+            if val < 0.30:
+                self.turn()
+                return 0
         self.forward()
 
 rospy.init_node("E_Stop", anonymous=True)
