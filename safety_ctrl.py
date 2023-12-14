@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
@@ -25,7 +29,7 @@ class EmergencyStop:
         self.pubCMD_VEL.publish(msg)
         
     def turn_right(self):
-        print("\rJe tourne a droitue\r")
+        print("\rJe tourne a droite\r")
         msg = Twist()
         msg.linear.x = 0.
         msg.angular.z = -0.4
@@ -46,12 +50,16 @@ class EmergencyStop:
         left_ranges = ranges[:len(ranges)//2]
         right_ranges = ranges[len(ranges)//2:]
         
+        # # Vérifier s'il y a un obstacle à gauche et à droite
+        # if min(left_ranges) < 0.3 and min(right_ranges) < 0.3:
+        #     self.stop()
+        
         # Vérifier s'il y a un obstacle à gauche
         if min(left_ranges) < 0.3:
-            self.turn_left()
+            self.turn_right()
         # Vérifier s'il y a un obstacle à droite
         elif min(right_ranges) < 0.3:
-            self.turn_right()
+            self.turn_left()
         # Aucun obstacle détecté, avancer
         else:
             self.forward()
