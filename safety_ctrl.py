@@ -18,14 +18,14 @@ class EmergencyStop:
         self.pubCMD_VEL.publish(msg)
         
     def turn_left(self):
-        print("\rJe tourne a droite\r")
+        print("\rJe tourne a gauche\r")
         msg = Twist()
         msg.linear.x = 0.
         msg.angular.z = 0.4
         self.pubCMD_VEL.publish(msg)
         
     def turn_right(self):
-        print("\rJe tourne a gauche\r")
+        print("\rJe tourne a droitue\r")
         msg = Twist()
         msg.linear.x = 0.
         msg.angular.z = -0.4
