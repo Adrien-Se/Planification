@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, Pose, Point, Quaternion
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from std_srvs.srv import Empty
@@ -37,6 +37,9 @@ class AutonomousNavigationRobot:
         # Initialiser l'action client pour move_base
         self.move_base_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         self.move_base_client.wait_for_server()
+        
+        # Marquer le point de départ comme référence (à ajuster selon votre carte)
+        self.reference_point = Point(x=0.0, y=0.0, z=0.0)
 
         rospy.spin()
 
@@ -47,6 +50,8 @@ class AutonomousNavigationRobot:
 
             # Stocker la carte dans une variable (par exemple, response.map)
             # Implémentez ici la logique pour utiliser la carte générée par gmapping
+            
+
             pass
 
         except rospy.ServiceException as e:
@@ -73,9 +78,18 @@ class AutonomousNavigationRobot:
         goal.target_pose.pose.position.x = 1.0
         goal.target_pose.pose.position.y = 1.0
         goal.target_pose.pose.orientation.w = 1.0
+        # goal.target_pose.pose.position = self.reference_point
+        # goal.target_pose.pose.orientation = Quaternion(w=1.0)
 
         # Envoyer la position de destination à move_base
         self.move_base_client.send_goal(goal)
 
+        # Attendre que move_base atteigne la destination
+        self.move_base_client.wait_for_result()
+
+        # Marquer que la planification de la trajectoire est complète
+        self.mapping_complete = True
+        
+        
 if __name__ == "__main__":
     autonomous_navigation_robot = AutonomousNavigationRobot()
